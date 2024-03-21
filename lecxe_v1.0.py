@@ -93,5 +93,17 @@ def agregarHoja():
         except Exception as e:
             print(f"Ocurrió un error al escribir en el archivo {os.path.basename(archivo)}: {e}")
 
+def dividirDocumento():
+    directorio = 'C:/Users/jpoot/Documents/Practicas/dividir_archivos'
+    documentDf = pd.read_excel(os.path.join(directorio, "Consolidated_mailbox_data.xlsx"), sheet_name="Individual Accounts")
+    
+    filtros_unicos = documentDf['Location'].unique()
+    
+    for unico in filtros_unicos:
+        filtro = documentDf[documentDf['Location'] == unico]
+        nombreArchivo = f"{unico}.xlsx" 
+        filtro.to_excel(nombreArchivo, index=False)  
+        print(f"Datos para: '{unico}' guardados en '{nombreArchivo}'")
+
 
 menu()
