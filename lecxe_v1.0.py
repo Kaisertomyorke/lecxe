@@ -64,5 +64,34 @@ def unificarDocumentos():
     else:
         print("No se encontraron archivos con la hoja 'Progress_'.")
 
+def agregarHoja():
+    print("Por favor, asegúrate de que la hoja que deseas agregar esté en un documento de Excel.")
+    nombreDocumento = input("Ingresa el nombre de tu documento: ")
+    nombreHoja = input("Ingresa el nombre de la hoja: ")
+    directorio = 'C:/Users/jpoot/Documents/Practicas/Agregar_hojas'
+    
+    archivos = glob.glob(os.path.join(directorio, '*.xlsx'))
+    
+    if not archivos:
+        print(f"No se encontraron archivos .xlsx en el directorio {directorio}.")
+        return
+    
+    try:
+        nuevahoja = pd.read_excel(os.path.join(directorio, f"{nombreDocumento}.xlsx"), sheet_name=nombreHoja)
+    except FileNotFoundError:
+        print(f"No se encontró el archivo {nombreDocumento}.xlsx en el directorio {directorio}.")
+        return
+    except Exception as e:
+        print(f"Ocurrió un error al leer el archivo: {e}")
+        return
+    
+    for archivo in archivos:
+        try:
+            with pd.ExcelWriter(archivo, mode='a', engine='openpyxl') as writer:
+                nuevahoja.to_excel(writer, sheet_name=nombreHoja, index=False)
+            print(f"La hoja se ha agregado exitosamente al archivo {os.path.basename(archivo)}.")
+        except Exception as e:
+            print(f"Ocurrió un error al escribir en el archivo {os.path.basename(archivo)}: {e}")
+
 
 menu()
