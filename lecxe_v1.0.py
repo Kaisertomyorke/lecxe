@@ -106,4 +106,25 @@ def dividirDocumento():
         print(f"Datos para: '{unico}' guardados en '{nombreArchivo}'")
 
 
+def limpiar_correos(texto):
+        if pd.isna(texto):  # Verifica si el valor es NaN
+            return ''  # Retorna una cadena vacía si el valor es NaN
+        correos = str(texto).split(',')  # Convierte el valor a cadena antes de aplicar split
+        correos_validos = [correo.strip() for correo in correos if '@' in correo]
+        return ','.join(correos_validos)
+    
+    archivo_excel = 'ALG_CORP_EMAIL_DATA_1.xlsx'
+    nombre_hoja = 'Shared Mailboxes'  # Reemplaza 'NombreDeTuHoja' con el nombre de tu hoja específica
+    df = pd.read_excel(archivo_excel, sheet_name=nombre_hoja)
+    
+    columna_deseada = 'Send As'
+    df[columna_deseada] = df[columna_deseada].apply(limpiar_correos)
+    
+    archivo_salida = 'datos_limpios_Send As.xlsx'
+    df.to_excel(archivo_salida, index=False)
+    
+    print("Correos electrónicos extraídos y guardados en", archivo_salida)
+
+
+
 menu()
